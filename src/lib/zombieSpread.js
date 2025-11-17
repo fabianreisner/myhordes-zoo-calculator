@@ -220,9 +220,20 @@ function performRespawn(zones, day, config) {
   });
 
   // Step 3: Spread until threshold is reached
-  while (!isAboveMinimumZombies(totalZombies, day, config)) {
+  // Add safety counter to prevent infinite loops on empty maps
+  let maxIterations = 1000;
+  let iterations = 0;
+  
+  while (!isAboveMinimumZombies(totalZombies, day, config) && iterations < maxIterations) {
     const added = runSpreadCycle(zones, false, true);
     totalZombies += added;
+    iterations++;
+    
+    // If no zombies were added and map is still empty, break to prevent infinite loop
+    if (added === 0 && totalZombies === 0) {
+      console.warn('Respawn failed: No zombies on map to spread from');
+      break;
+    }
   }
 
   // Step 4: Add backup zombies back
