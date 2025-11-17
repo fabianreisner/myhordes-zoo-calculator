@@ -132,8 +132,9 @@ function placeInitialZombies(zones, config) {
 
   // Step 4: Run initial spread cycles (2 for MyHordes)
   const initialCycles = config.governor === 'Hordes' ? 3 : 2;
+  const noDespair = new Map(); // No despair during initial generation
   for (let i = 0; i < initialCycles; i++) {
-    runSpreadCycle(zones, false, true);
+    runSpreadCycle(zones, noDespair, false, true);
   }
 
   // Step 5: Ensure minimum zombie count
@@ -143,7 +144,7 @@ function placeInitialZombies(zones, config) {
   const minZombies = 1 * config.respawnThreshold * config.respawnFactor;
 
   while (totalZombies < minZombies && attempts < 3) {
-    runSpreadCycle(zones, false, true);
+    runSpreadCycle(zones, noDespair, false, true);
     totalZombies = getTotalZombies(zones);
     attempts++;
   }

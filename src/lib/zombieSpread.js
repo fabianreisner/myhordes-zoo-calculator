@@ -170,14 +170,14 @@ export function simulateDay(zones, day, config) {
   // AND calculate despair values BEFORE any spreading
   // This matches MapMaker.php:463
   const despairDb = new Map();
-  zones.forEach(zone => {
+  zones.forEach((zone, key) => {
     zone.initialZombies = zone.zombies;
     zone.scoutEstimationOffset = randomInt(-2, 2);
     
     // Freeze despair value at start of day
     // despair = floor(max(0, (initialZombies - zombies - 1) / 2))
     const despair = Math.floor(Math.max(0, (zone.initialZombies - zone.zombies - 1) / 2));
-    despairDb.set(zone.key, despair);
+    despairDb.set(key, despair);
   });
 
   // Check if respawn is needed

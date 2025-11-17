@@ -11,10 +11,8 @@ import { simulateDay, killZombies as killZombiesUtil, addZombies as addZombiesUt
 export function useSimulation(initialSize = 25) {
   const [state, setState] = useState(() => {
     const simState = new SimulationState(initialSize);
-    // Don't generate map on server - will be generated on client mount
-    if (typeof window !== 'undefined') {
-      simState.zones = generateEmptyMap(initialSize, 0, 0);
-    }
+    // Start with empty zones Map - will be populated on client mount
+    simState.zones = new Map();
     return simState;
   });
   
