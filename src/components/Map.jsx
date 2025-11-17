@@ -27,7 +27,7 @@ function Map({ zones, size, selectedZone, onZoneClick, onZoneRightClick, onZoneE
   }, [size, offset, originY]);
 
   return (
-    <div id="map-wrapper">
+    <div id="map-wrapper" data-size={size}>
       <div id="map">
         {/* Top ruler bar */}
         <ul className="maprow maprulebar-top">

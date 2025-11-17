@@ -9,6 +9,15 @@ div#map-wrapper {
     transition: transform 0.3s ease;
 }
 
+/* Scale down larger maps to fit */
+div#map-wrapper[data-size="26"] {
+    transform: scale(0.96);
+}
+
+div#map-wrapper[data-size="27"] {
+    transform: scale(0.93);
+}
+
 div#map {
     display: block;
 }

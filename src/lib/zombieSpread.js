@@ -17,14 +17,14 @@ import {
  * This is the core of the zombie spread mechanics
  * 
  * @param {Map} zones - Map of all zones
+ * @param {Map} despairDb - Frozen snapshot of despair values (from start of day)
  * @param {boolean} observeDespair - If true, skip zones with despair > 0
  * @param {boolean} diagonalSpawn - If true, include diagonal neighbors (Day 2+)
  * @returns {number} Total number of zombies added this cycle
  */
-export function runSpreadCycle(zones, observeDespair = false, diagonalSpawn = true) {
-  // Create snapshots of current state before any changes
+export function runSpreadCycle(zones, despairDb, observeDespair = false, diagonalSpawn = true) {
+  // Create snapshot of current state before any changes
   const zoneDb = createZombieSnapshot(zones);
-  const despairDb = createDespairSnapshot(zones);
   
   let cycleResult = 0;
 
@@ -34,7 +34,9 @@ export function runSpreadCycle(zones, observeDespair = false, diagonalSpawn = tr
     if (zone.isTown) return;
     
     // Skip zones with despair if observing despair
-    if (observeDespair && zone.despair > 0) return;
+    // Use FROZEN despair value from start of day
+    const zoneDespair = despairDb.get(key) || 0;
+    if (observeDespair && zoneDespair > 0) return;
 
     const before = zoneDb.get(key) || 0;
     let newZombies = before;
@@ -154,15 +156,28 @@ function calculateEmptyZoneSpawn(zone, zones, zoneDb, diagonalSpawn) {
  * Simulates one full day cycle
  * Based on MapMaker.php:451-525 (zombieSpawnGovernorMH)
  * 
+ * This precisely matches the game's order of operations:
+ * 1. Calculate and freeze despair values at START of day
+ * 2. Run spread cycle (using frozen despair to skip zones)
+ * 3. Apply despair reduction to POST-SPREAD zombie counts
+ * 
  * @param {Map} zones - Map of all zones
  * @param {number} day - Current day number
  * @param {SimulationConfig} config - Configuration
  */
 export function simulateDay(zones, day, config) {
   // Save current state as initial for this day
+  // AND calculate despair values BEFORE any spreading
+  // This matches MapMaker.php:463
+  const despairDb = new Map();
   zones.forEach(zone => {
     zone.initialZombies = zone.zombies;
     zone.scoutEstimationOffset = randomInt(-2, 2);
+    
+    // Freeze despair value at start of day
+    // despair = floor(max(0, (initialZombies - zombies - 1) / 2))
+    const despair = Math.floor(Math.max(0, (zone.initialZombies - zone.zombies - 1) / 2));
+    despairDb.set(zone.key, despair);
   });
 
   // Check if respawn is needed
@@ -171,19 +186,22 @@ export function simulateDay(zones, day, config) {
   
   if (mode === 'force' || 
       (mode === 'auto' && !isAboveMinimumZombies(totalZombies, day, config))) {
-    performRespawn(zones, day, config);
+    performRespawn(zones, day, config, despairDb);
   }
 
   // Run ONE spread cycle per day (matching game behavior)
   // The cycle observes despair on first iteration only
   // MapMaker.php:512 shows: for ($c = 0; $c < $cycles; $c++) $fun_cycle($c == 0, $d >= 2)
   // And NightlyHandler.php:1432 calls dailyZombieSpawn($town) with default cycles=1
-  runSpreadCycle(zones, true, day >= 2);
+  // Pass the FROZEN despair values
+  runSpreadCycle(zones, despairDb, true, day >= 2);
 
-  // Apply despair reduction
-  zones.forEach(zone => {
-    if (zone.despair >= 1) {
-      zone.zombies = Math.max(0, zone.zombies - zone.despair);
+  // Apply despair reduction to POST-SPREAD zombie counts
+  // This matches MapMaker.php:518-520
+  zones.forEach((zone, key) => {
+    const zoneDespair = despairDb.get(key) || 0;
+    if (zoneDespair >= 1) {
+      zone.zombies = Math.max(0, zone.zombies - zoneDespair);
     }
     // Reset for next day
     zone.playerDeaths = 0;
@@ -204,8 +222,9 @@ function isAboveMinimumZombies(totalZombies, day, config) {
  * Based on MapMaker.php:484-509
  * 
  * This resets the map to Day 1, spreads until threshold, then adds current zombies back
+ * Note: This assumes the map was generated with initial zombies (startZombies > 0 somewhere)
  */
-function performRespawn(zones, day, config) {
+function performRespawn(zones, day, config, despairDb) {
   // Step 1: Backup current zombie distribution
   const backup = new Map();
   zones.forEach((zone, key) => {
@@ -219,21 +238,38 @@ function performRespawn(zones, day, config) {
     totalZombies += zone.zombies;
   });
 
+  // If map has no startZombies at all (empty map), skip respawn entirely
+  // This matches game behavior - you can't respawn from nothing
+  if (totalZombies === 0) {
+    console.warn('Respawn skipped: Map has no initial zombies (startZombies = 0). Generate a map with zombies first.');
+    // Restore backup and exit
+    zones.forEach((zone, key) => {
+      zone.zombies = backup.get(key) || 0;
+    });
+    return;
+  }
+
   // Step 3: Spread until threshold is reached
-  // Add safety counter to prevent infinite loops on empty maps
+  // During respawn, we don't observe despair (pass empty Map)
+  // Safety limit prevents infinite loops
   let maxIterations = 1000;
   let iterations = 0;
+  const noDespair = new Map();
   
   while (!isAboveMinimumZombies(totalZombies, day, config) && iterations < maxIterations) {
-    const added = runSpreadCycle(zones, false, true);
+    const added = runSpreadCycle(zones, noDespair, false, true);
     totalZombies += added;
     iterations++;
     
-    // If no zombies were added and map is still empty, break to prevent infinite loop
-    if (added === 0 && totalZombies === 0) {
-      console.warn('Respawn failed: No zombies on map to spread from');
+    // Safety: If no zombies were added, something is wrong
+    if (added === 0) {
+      console.warn('Respawn stalled: No zombies spreading. Total:', totalZombies);
       break;
     }
+  }
+
+  if (iterations >= maxIterations) {
+    console.warn('Respawn hit iteration limit. This should not happen with valid startZombies.');
   }
 
   // Step 4: Add backup zombies back
