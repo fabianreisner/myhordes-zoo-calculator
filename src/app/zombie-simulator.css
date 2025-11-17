@@ -1,0 +1,1285 @@
+/* ================== Zombie Simulator Map Styles ================== */
+/* Adapted from Fata Morgana styles for MyHordes */
+
+div#map-wrapper {
+    position: relative;
+    display: inline-block;
+    margin: 0 auto;
+    transform-origin: center;
+    transition: transform 0.3s ease;
+}
+
+div#map {
+    display: block;
+}
+
+ul.maprow {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+}
+
+li.mapzone, li.mapruler, li.mapcorner {
+    width: 32px;
+    height: 32px;
+    display: inline-block;
+    position: relative;
+    border: 1px solid rgba(61, 52, 48, .5);
+    box-sizing: border-box;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+li.mapzone {
+    cursor: pointer;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    overflow: hidden;
+    font-size: 11px;
+    text-align: center;
+    box-shadow: inset 0 0 3px rgba(0,0,0,0.7);
+}
+
+li.mapzone.nvt {
+    /* Not visited today - slightly darker */
+    filter: brightness(0.8) contrast(1.1);
+}
+
+li.mapzone.nyv {
+    /* Never visited - even darker */
+    filter: brightness(0.6) contrast(1.2) saturate(0.8);
+}
+
+li.mapzone.city {
+    background-color: #3d3430;
+    border-color: #7a3a38;
+    box-shadow: 
+        inset 0 0 5px rgba(0,0,0,0.9),
+        0 0 8px rgba(122,58,56,0.6);
+}
+
+li.mapzone:hover { 
+    border-color: #d4a574 !important;
+    border-width: 2px;
+    z-index: 10;
+    box-shadow: 
+        inset 0 0 3px rgba(0,0,0,0.7),
+        0 0 12px rgba(212,165,116,0.6);
+}
+
+li.mapzone.selectedZone { 
+    border-color: #8b0000;
+    border-width: 2px;
+    z-index: 11;
+    box-shadow: 
+        inset 0 0 3px rgba(0,0,0,0.7),
+        0 0 15px rgba(139,0,0,0.8);
+}
+
+li.mapzone > * {
+    pointer-events: none;
+}
+
+li.mapruler {
+    background-color: rgba(26, 22, 20, .8);
+    font-size: 10px;
+    text-align: center;
+    line-height: 32px;
+    color: #8a7d6f;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.9);
+    font-family: 'Courier New', 'Consolas', monospace;
+}
+
+li.mapcorner {
+    background-color: rgba(13, 10, 9, .9);
+    border-color: rgba(61, 52, 48, .6);
+}
+
+/* Ruler corners */
+ul.maprulebar-top li.mapcorner.first { 
+    border-radius: 32px 0 0 0; 
+    border-color: transparent rgba(61, 52, 48, .6) rgba(61, 52, 48, .6) transparent;
+}
+ul.maprulebar-top li.mapcorner.last { 
+    border-radius: 0 32px 0 0; 
+    border-color: transparent transparent rgba(61, 52, 48, .6) rgba(61, 52, 48, .6);
+}
+ul.maprulebar-bottom li.mapcorner.first { 
+    border-radius: 0 0 0 32px; 
+    border-color: rgba(61, 52, 48, .6) rgba(61, 52, 48, .6) transparent transparent;
+}
+ul.maprulebar-bottom li.mapcorner.last { 
+    border-radius: 0 0 32px 0; 
+    border-color: rgba(61, 52, 48, .6) transparent transparent rgba(61, 52, 48, .6);
+}
+
+/* Danger levels - zombie density colors - Gritty/Dark Palette */
+/* 0: No zombies (very dark green - safe zone) */
+li.mapzone.danger0 { 
+    background-color: #1a2e14; 
+    box-shadow: inset 0 0 5px rgba(0,0,0,0.8);
+}
+/* 1: 1-2 zombies (murky green) */
+li.mapzone.danger1 { 
+    background-color: #3d4a1f; 
+    box-shadow: inset 0 0 5px rgba(0,0,0,0.8);
+}
+/* 2: 3-5 zombies (dirty brown) */
+li.mapzone.danger2 { 
+    background-color: #5a3a1a; 
+    box-shadow: inset 0 0 5px rgba(0,0,0,0.8);
+}
+/* 3: 6-9 zombies (dried blood red) */
+li.mapzone.danger3 { 
+    background-color: #5a1a1a; 
+    box-shadow: inset 0 0 5px rgba(0,0,0,0.8), 0 0 8px rgba(90,26,26,0.4);
+}
+/* 4: 10+ zombies (deep midnight blue - overwhelming) */
+li.mapzone.danger4 { 
+    background-color: #1a2840; 
+    box-shadow: inset 0 0 5px rgba(0,0,0,0.8), 0 0 10px rgba(26,40,64,0.5);
+}
+
+/* Dark mode variations (darker) */
+body.dark li.mapzone.danger0 { 
+    background-color: #0d1a09; 
+    box-shadow: inset 0 0 6px rgba(0,0,0,0.9);
+}
+body.dark li.mapzone.danger1 { 
+    background-color: #2a3515; 
+    box-shadow: inset 0 0 6px rgba(0,0,0,0.9);
+}
+body.dark li.mapzone.danger2 { 
+    background-color: #3d2512; 
+    box-shadow: inset 0 0 6px rgba(0,0,0,0.9);
+}
+body.dark li.mapzone.danger3 { 
+    background-color: #3d1212; 
+    box-shadow: inset 0 0 6px rgba(0,0,0,0.9), 0 0 10px rgba(61,18,18,0.5);
+}
+body.dark li.mapzone.danger4 { 
+    background-color: #121c2a; 
+    box-shadow: inset 0 0 6px rgba(0,0,0,0.9), 0 0 12px rgba(18,28,42,0.6);
+}
+
+/* Contrast mode - more vibrant but still gritty */
+body.contrast li.mapzone.danger0,
+body.contrast.dark li.mapzone.danger0 { 
+    background-color: #2d4a24; 
+    box-shadow: inset 0 0 5px rgba(0,0,0,0.7);
+}
+body.contrast li.mapzone.danger1,
+body.contrast.dark li.mapzone.danger1 { 
+    background-color: #5a6b30; 
+    box-shadow: inset 0 0 5px rgba(0,0,0,0.7);
+}
+body.contrast li.mapzone.danger2,
+body.contrast.dark li.mapzone.danger2 { 
+    background-color: #8b5a2d; 
+    box-shadow: inset 0 0 5px rgba(0,0,0,0.7);
+}
+body.contrast li.mapzone.danger3,
+body.contrast.dark li.mapzone.danger3 { 
+    background-color: #8b2d2d; 
+    box-shadow: inset 0 0 5px rgba(0,0,0,0.7), 0 0 10px rgba(139,45,45,0.5);
+}
+body.contrast li.mapzone.danger4,
+body.contrast.dark li.mapzone.danger4 { 
+    background-color: #2d4a6b; 
+    box-shadow: inset 0 0 5px rgba(0,0,0,0.7), 0 0 12px rgba(45,74,107,0.6);
+}
+
+/* Zone content overlays */
+.citizen, .zombies, .maxzombies {
+    position: absolute;
+    font-size: 10px;
+    font-weight: bold;
+    color: #c9b8a3;
+    text-shadow: 0 0 4px #000, 1px 1px 2px #000;
+    font-family: 'Courier New', 'Consolas', monospace;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    pointer-events: none;
+}
+
+.zombies {
+    bottom: 2px;
+    right: 2px;
+    color: #ff5555;
+    text-shadow: 0 0 6px rgba(255,0,0,0.8), 1px 1px 2px #000;
+}
+
+.zombies.zombie-exact {
+    background: rgba(0, 0, 0, 0.8);
+    padding: 2px 4px;
+    border-radius: 2px;
+    font-size: 9px;
+    border: 1px solid rgba(139,0,0,0.6);
+}
+
+.maxzombies {
+    top: 2px;
+    right: 2px;
+    color: #d4a574;
+    font-size: 8px;
+    text-shadow: 0 0 4px rgba(212,165,116,0.6), 1px 1px 2px #000;
+}
+
+.town-house {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 20px;
+    line-height: 1;
+    filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.5));
+}
+
+.building {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 16px;
+    height: 16px;
+    background: rgba(255, 255, 255, 0.9);
+    border: 2px solid #ffffff;
+    border-radius: 2px;
+    box-shadow: 
+        0 2px 4px rgba(0,0,0,0.8),
+        0 0 8px rgba(255,255,255,0.6),
+        inset 0 1px 0 rgba(255,255,255,0.3);
+}
+
+.building-ruin {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 16px;
+    height: 16px;
+    background: rgba(255, 255, 255, 0.9);
+    border: 2px solid #ffffff;
+    border-radius: 2px;
+    box-shadow: 
+        0 2px 4px rgba(0,0,0,0.8),
+        0 0 8px rgba(255,255,255,0.6),
+        inset 0 1px 0 rgba(255,255,255,0.3);
+    filter: grayscale(100%) brightness(0.7);
+}
+
+.zone-updated {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.zone-updated-today { background: #00ff00; }
+.zone-updated-yesterday { background: #ffff00; }
+.zone-updated-b4yesterday { background: #ff9900; }
+.zone-updated-longago { background: #ff0000; }
+
+/* =========================== ZOMBIE SURVIVAL THEME =========================== */
+
+/* Body - Post-Apocalyptic Dark Background */
+body {
+    background: linear-gradient(180deg, #1a1514 0%, #0d0a09 100%);
+    color: #c9b8a3;
+    font-family: 'Courier New', 'Consolas', monospace;
+}
+
+/* Simulator Container */
+.simulator-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.simulator-container h1 {
+    text-align: center;
+    color: #8b0000;
+    text-shadow: 
+        2px 2px 4px rgba(0,0,0,0.9), 
+        0 0 20px rgba(139,0,0,0.6),
+        0 0 40px rgba(139,0,0,0.3);
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin-bottom: 10px;
+    font-size: 2.8em;
+    border-bottom: 3px solid #5a2422;
+    padding-bottom: 15px;
+}
+
+.simulator-container > p {
+    text-align: center;
+    color: #7a6960;
+    font-style: italic;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+    margin-bottom: 30px;
+}
+
+.layout {
+    display: flex;
+    gap: 20px;
+    align-items: stretch;
+    min-height: 700px;
+}
+
+/* Control Panel - Weathered Metal/Concrete Look */
+.control-panel {
+    min-width: 320px;
+    padding: 25px;
+    background: 
+        linear-gradient(135deg, #2a2622 0%, #1a1614 100%);
+    border: 3px solid #3d3430;
+    border-radius: 6px;
+    box-shadow: 
+        0 0 30px rgba(0,0,0,0.9),
+        inset 0 2px 0 rgba(255,255,255,0.08),
+        inset 0 -2px 0 rgba(0,0,0,0.6);
+    position: relative;
+}
+
+.control-panel::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 3px,
+            rgba(0,0,0,0.05) 3px,
+            rgba(0,0,0,0.05) 6px
+        );
+    pointer-events: none;
+    border-radius: 6px;
+}
+
+.control-panel h2 {
+    margin-top: 0;
+    font-size: 28px;
+    color: #d4a574;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-shadow: 
+        2px 2px 4px rgba(0,0,0,0.8),
+        0 0 10px rgba(212,165,116,0.4);
+    border-bottom: 2px solid #3d3430;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.control-panel p {
+    margin: 10px 0;
+    font-size: 13px;
+    color: #8a7d6f;
+}
+
+/* Mode Switcher - Rugged Buttons */
+.mode-switcher {
+    display: flex;
+    gap: 0;
+    margin-bottom: 25px;
+    border: 3px solid #3d3430;
+    border-radius: 6px;
+    overflow: hidden;
+    background: #0d0a09;
+    box-shadow: inset 0 2px 6px rgba(0,0,0,0.7);
+}
+
+.mode-switcher button {
+    flex: 1;
+    padding: 14px 10px;
+    border: none;
+    background: linear-gradient(180deg, #2a2622 0%, #1a1614 100%);
+    color: #7a6960;
+    cursor: pointer;
+    font-family: 'Courier New', 'Consolas', monospace;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 14px;
+    letter-spacing: 1.5px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border-right: 2px solid #3d3430;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.9);
+}
+
+.mode-switcher button:last-child {
+    border-right: none;
+}
+
+.mode-switcher button:hover {
+    background: linear-gradient(180deg, #3d3430 0%, #2a2622 100%);
+    color: #a89680;
+}
+
+.mode-switcher button.active {
+    background: linear-gradient(180deg, #5a2422 0%, #3d1614 100%);
+    color: #d4a574;
+    box-shadow: 
+        inset 0 3px 10px rgba(0,0,0,0.7), 
+        0 0 20px rgba(90,36,34,0.6);
+    text-shadow: 
+        0 0 12px rgba(212,165,116,0.8), 
+        1px 1px 3px rgba(0,0,0,0.9);
+}
+
+/* Stats Grid - Tactical Display */
+.stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 15px;
+    margin-bottom: 25px;
+    padding: 18px;
+    background: rgba(0,0,0,0.5);
+    border: 2px solid #3d3430;
+    border-radius: 5px;
+    box-shadow: inset 0 3px 6px rgba(0,0,0,0.6);
+}
+
+.stat-item {
+    padding: 12px;
+    background: linear-gradient(135deg, #1a1614 0%, #0d0a09 100%);
+    border: 2px solid #3d3430;
+    border-radius: 4px;
+    font-size: 13px;
+    box-shadow: 
+        0 3px 6px rgba(0,0,0,0.6),
+        inset 0 1px 0 rgba(255,255,255,0.05);
+}
+
+.stat-item strong {
+    color: #8a7d6f;
+    text-transform: uppercase;
+    font-size: 10px;
+    letter-spacing: 1px;
+    display: block;
+    margin-bottom: 6px;
+}
+
+.stat-item br + span,
+.stat-item br + strong {
+    color: #d4a574;
+    font-size: 15px;
+}
+
+/* Toggle Button - Industrial Switch */
+.toggle-button {
+    position: relative;
+    width: 90px;
+    height: 40px;
+    background: linear-gradient(180deg, #1a1614 0%, #0d0a09 100%);
+    border: 3px solid #3d3430;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 
+        inset 0 3px 6px rgba(0,0,0,0.7),
+        0 3px 6px rgba(0,0,0,0.4);
+    overflow: hidden;
+}
+
+.toggle-button:hover {
+    border-color: #4d4440;
+    box-shadow: 
+        inset 0 3px 6px rgba(0,0,0,0.7),
+        0 3px 8px rgba(0,0,0,0.5),
+        0 0 15px rgba(61,52,48,0.3);
+}
+
+.toggle-slider {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: 30px;
+    height: 30px;
+    background: linear-gradient(135deg, #3d3430 0%, #2a2622 100%);
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    box-shadow: 
+        0 3px 6px rgba(0,0,0,0.9),
+        inset 0 1px 0 rgba(255,255,255,0.15);
+}
+
+.toggle-button.active .toggle-slider {
+    left: 52px;
+    background: linear-gradient(135deg, #8b0000 0%, #5a0000 100%);
+    box-shadow: 
+        0 3px 8px rgba(0,0,0,0.9),
+        0 0 20px rgba(139,0,0,0.9),
+        0 0 30px rgba(139,0,0,0.5),
+        inset 0 1px 0 rgba(255,100,100,0.3);
+}
+
+.toggle-label {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 1.5px;
+    color: #5a4d42;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.9);
+    transition: all 0.3s ease;
+}
+
+.toggle-button:not(.active) .toggle-label {
+    right: 10px;
+}
+
+.toggle-button.active .toggle-label {
+    left: 10px;
+    color: #ff5555;
+    text-shadow: 
+        0 0 10px rgba(255,85,85,0.9), 
+        1px 1px 3px rgba(0,0,0,0.9);
+}
+
+/* Create/Simulate Controls - Weathered Boxes */
+.create-controls,
+.simulate-controls {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 18px;
+    background: rgba(0,0,0,0.5);
+    border: 2px solid #3d3430;
+    border-radius: 5px;
+    box-shadow: inset 0 2px 6px rgba(0,0,0,0.6);
+}
+
+.create-controls label,
+.simulate-controls label {
+    display: block;
+    margin-bottom: 12px;
+    color: #8a7d6f;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: bold;
+}
+
+/* Buttons - Worn & Gritty */
+.controls {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin: 20px 0;
+}
+
+.controls button {
+    width: 100%;
+    padding: 14px;
+    border: 3px solid #3d3430;
+    background: linear-gradient(180deg, #2a2622 0%, #1a1614 100%);
+    color: #c9b8a3;
+    cursor: pointer;
+    font-family: 'Courier New', 'Consolas', monospace;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 14px;
+    letter-spacing: 1.5px;
+    border-radius: 5px;
+    transition: all 0.2s ease;
+    box-shadow: 
+        0 5px 8px rgba(0,0,0,0.6),
+        inset 0 1px 0 rgba(255,255,255,0.08);
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.9);
+}
+
+.controls button:hover:not(:disabled) {
+    background: linear-gradient(180deg, #3d3430 0%, #2a2622 100%);
+    border-color: #4d4440;
+    transform: translateY(-2px);
+    box-shadow: 
+        0 7px 12px rgba(0,0,0,0.7),
+        inset 0 1px 0 rgba(255,255,255,0.12);
+}
+
+.controls button:active:not(:disabled) {
+    transform: translateY(1px);
+    box-shadow: 
+        0 2px 4px rgba(0,0,0,0.6),
+        inset 0 3px 6px rgba(0,0,0,0.6);
+}
+
+.controls button:disabled {
+    background: linear-gradient(180deg, #1a1614 0%, #0d0a09 100%);
+    color: #4d4440;
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.controls button.primary {
+    background: linear-gradient(180deg, #2d4a24 0%, #1d3318 100%);
+    border-color: #3d5a34;
+    color: #b8d4a8;
+}
+
+.controls button.primary:hover:not(:disabled) {
+    background: linear-gradient(180deg, #3d5a34 0%, #2d4a24 100%);
+    border-color: #4d6a44;
+    box-shadow: 
+        0 7px 12px rgba(0,0,0,0.7), 
+        0 0 20px rgba(61,90,52,0.5);
+}
+
+.controls button.secondary {
+    background: linear-gradient(180deg, #1a3d5a 0%, #0d2633 100%);
+    border-color: #2a4d6a;
+    color: #a8c5d5;
+}
+
+.controls button.secondary:hover:not(:disabled) {
+    background: linear-gradient(180deg, #2a4d6a 0%, #1a3d5a 100%);
+    border-color: #3a5d7a;
+    box-shadow: 
+        0 7px 12px rgba(0,0,0,0.7), 
+        0 0 20px rgba(42,77,106,0.5);
+}
+
+.controls button.danger {
+    background: linear-gradient(180deg, #5a1a1a 0%, #330d0d 100%);
+    border-color: #6a2a2a;
+    color: #d5a8a8;
+}
+
+.controls button.danger:hover:not(:disabled) {
+    background: linear-gradient(180deg, #6a2a2a 0%, #5a1a1a 100%);
+    border-color: #7a3a3a;
+    box-shadow: 
+        0 7px 12px rgba(0,0,0,0.7), 
+        0 0 20px rgba(106,42,42,0.5);
+}
+
+/* Input Fields - Tactical */
+input[type="number"],
+select,
+input[type="range"] {
+    width: 100%;
+    padding: 10px;
+    margin: 6px 0;
+    background: #0d0a09;
+    border: 2px solid #3d3430;
+    border-radius: 4px;
+    color: #c9b8a3;
+    font-family: 'Courier New', 'Consolas', monospace;
+    font-size: 14px;
+    box-shadow: inset 0 2px 6px rgba(0,0,0,0.7);
+}
+
+input[type="number"]:focus,
+select:focus {
+    outline: none;
+    border-color: #8b0000;
+    box-shadow: 
+        inset 0 2px 6px rgba(0,0,0,0.7),
+        0 0 15px rgba(139,0,0,0.6);
+}
+
+input[type="range"] {
+    padding: 0;
+    height: 8px;
+    -webkit-appearance: none;
+    appearance: none;
+    background: #0d0a09;
+    border-radius: 4px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: linear-gradient(135deg, #5a2422 0%, #3d1614 100%);
+    border: 2px solid #7a3a38;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 
+        0 2px 4px rgba(0,0,0,0.8),
+        0 0 10px rgba(90,36,34,0.5);
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background: linear-gradient(135deg, #5a2422 0%, #3d1614 100%);
+    border: 2px solid #7a3a38;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 
+        0 2px 4px rgba(0,0,0,0.8),
+        0 0 10px rgba(90,36,34,0.5);
+}
+
+/* Config Section */
+.config {
+    margin-top: 25px;
+    padding: 18px;
+    background: rgba(0,0,0,0.5);
+    border: 2px solid #3d3430;
+    border-radius: 5px;
+    box-shadow: inset 0 2px 6px rgba(0,0,0,0.6);
+}
+
+.config h3 {
+    color: #8a7d6f;
+    text-transform: uppercase;
+    font-size: 13px;
+    letter-spacing: 1.5px;
+    margin-bottom: 18px;
+    border-bottom: 2px solid #3d3430;
+    padding-bottom: 10px;
+}
+
+.config label {
+    display: block;
+    margin-bottom: 12px;
+    color: #7a6960;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.config p {
+    font-size: 11px;
+    color: #5a4d42;
+    font-style: italic;
+}
+
+/* Map Container - Dark & Atmospheric */
+.map-container {
+    flex: 1;
+    background: linear-gradient(135deg, #1a1614 0%, #0d0a09 100%);
+    border: 4px solid #3d3430;
+    border-radius: 6px;
+    padding: 25px;
+    box-shadow: 
+        0 0 40px rgba(0,0,0,0.95),
+        inset 0 0 60px rgba(0,0,0,0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    min-height: 650px;
+    position: relative;
+}
+
+/* Modal backdrop */
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 999;
+    backdrop-filter: blur(2px);
+}
+
+/* Modal Overlay (for ZoneEditModal) */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    backdrop-filter: blur(3px);
+}
+
+.modal-content {
+    background: linear-gradient(135deg, #2a2622 0%, #1a1614 100%);
+    border: 3px solid #3d3430;
+    padding: 28px;
+    border-radius: 6px;
+    min-width: 350px;
+    max-width: 500px;
+    box-shadow: 
+        0 0 40px rgba(0,0,0,0.95),
+        inset 0 2px 0 rgba(255,255,255,0.08);
+    font-family: 'Courier New', 'Consolas', monospace;
+}
+
+.modal-content h3 {
+    margin: 0 0 24px 0;
+    color: #d4a574;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+    border-bottom: 2px solid #3d3430;
+    padding-bottom: 12px;
+    font-size: 18px;
+}
+
+.modal-content .form-group {
+    margin-bottom: 18px;
+}
+
+.modal-content .form-group label {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-weight: bold;
+    color: #8a7d6f;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.modal-content .form-group input[type="number"] {
+    padding: 12px;
+    border: 2px solid #3d3430;
+    border-radius: 4px;
+    font-size: 15px;
+    background: #0d0a09;
+    color: #c9b8a3;
+    font-family: 'Courier New', 'Consolas', monospace;
+    box-shadow: inset 0 2px 6px rgba(0,0,0,0.7);
+}
+
+.modal-content .form-group input[type="number"]:focus {
+    outline: none;
+    border-color: #8b0000;
+    box-shadow: 
+        inset 0 2px 6px rgba(0,0,0,0.7),
+        0 0 15px rgba(139,0,0,0.6);
+}
+
+.modal-content .form-group input[type="checkbox"] {
+    width: auto;
+    margin-right: 10px;
+    cursor: pointer;
+    width: 18px;
+    height: 18px;
+}
+
+.modal-content .form-group label:has(input[type="checkbox"]) {
+    flex-direction: row;
+    align-items: center;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    margin-top: 28px;
+}
+
+/* Manage Maps Modal Specific Styles */
+.manage-maps-modal {
+    min-width: 500px;
+    max-width: 600px;
+}
+
+.saved-maps-list {
+    max-height: 400px;
+    overflow-y: auto;
+    margin: 0 -28px;
+    padding: 0 28px;
+}
+
+.saved-map-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    margin-bottom: 12px;
+    background: rgba(0,0,0,0.4);
+    border: 2px solid #3d3430;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.saved-map-item:hover {
+    border-color: #4d4440;
+    background: rgba(0,0,0,0.5);
+}
+
+.saved-map-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.saved-map-name {
+    color: #d4a574;
+    font-weight: bold;
+    font-size: 14px;
+    margin-bottom: 6px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.saved-map-details {
+    color: #8a7d6f;
+    font-size: 12px;
+}
+
+.saved-map-actions {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+/* Save Notification Toast */
+@keyframes slideIn {
+    from {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    0% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    100% {
+        opacity: 0;
+        transform: translateX(100px);
+    }
+}
+
+.save-notification {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    background: linear-gradient(135deg, #2d4a24 0%, #1d3318 100%);
+    border: 3px solid #3d5a34;
+    border-radius: 6px;
+    padding: 16px 20px;
+    min-width: 280px;
+    box-shadow: 
+        0 8px 24px rgba(0,0,0,0.9),
+        0 0 40px rgba(45,74,36,0.6),
+        inset 0 1px 0 rgba(255,255,255,0.1);
+    z-index: 10000;
+    font-family: 'Courier New', 'Consolas', monospace;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    animation: slideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.save-notification.closing {
+    animation: fadeOut 0.5s cubic-bezier(0.4, 0, 1, 1) forwards;
+}
+
+.save-notification .save-icon-container {
+    color: #b8d4a8;
+    display: flex;
+    align-items: center;
+    filter: drop-shadow(0 0 8px rgba(184,212,168,0.6));
+}
+
+.save-notification .save-message {
+    flex: 1;
+    color: #b8d4a8;
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+}
+
+.save-notification .close-btn {
+    background: transparent;
+    border: none;
+    color: #8a7d6f;
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    margin-left: 8px;
+}
+
+.save-notification .close-btn:hover {
+    color: #d4a574;
+    transform: scale(1.2);
+}
+
+/* Zone Info Tooltip - Floating Modal Style */
+.zone-info-tooltip {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: linear-gradient(135deg, #2a2622 0%, #1a1614 100%);
+    border: 3px solid #3d3430;
+    border-radius: 6px;
+    padding: 24px;
+    min-width: 320px;
+    max-width: 400px;
+    box-shadow: 
+        0 0 50px rgba(0,0,0,0.95),
+        0 0 100px rgba(0,0,0,0.7),
+        inset 0 2px 0 rgba(255,255,255,0.08);
+    z-index: 1000;
+    font-family: 'Courier New', 'Consolas', monospace;
+}
+
+.zone-info-tooltip h3 {
+    margin: 0 0 20px 0;
+    color: #d4a574;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+    border-bottom: 2px solid #3d3430;
+    padding-bottom: 12px;
+    font-size: 16px;
+    padding-right: 30px;
+}
+
+.zone-info-tooltip .close-btn {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    background: transparent;
+    border: none;
+    color: #8a7d6f;
+    font-size: 28px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.zone-info-tooltip .close-btn:hover {
+    color: #d4a574;
+    transform: scale(1.2);
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 10px;
+    background: rgba(0,0,0,0.4);
+    border: 1px solid #3d3430;
+    border-radius: 4px;
+}
+
+.info-item .label {
+    font-size: 10px;
+    color: #7a6960;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: bold;
+}
+
+.info-item .value {
+    font-size: 14px;
+    color: #d4a574;
+    font-weight: bold;
+}
+
+.tooltip-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: space-between;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 2px solid #3d3430;
+}
+
+.btn-small {
+    flex: 1;
+    padding: 10px 12px;
+    border: 2px solid #3d3430;
+    background: linear-gradient(180deg, #2a2622 0%, #1a1614 100%);
+    color: #c9b8a3;
+    cursor: pointer;
+    font-family: 'Courier New', 'Consolas', monospace;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: 1px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    box-shadow: 
+        0 3px 6px rgba(0,0,0,0.6),
+        inset 0 1px 0 rgba(255,255,255,0.08);
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.9);
+}
+
+.btn-small:hover:not(:disabled) {
+    background: linear-gradient(180deg, #3d3430 0%, #2a2622 100%);
+    border-color: #4d4440;
+    transform: translateY(-1px);
+    box-shadow: 
+        0 5px 8px rgba(0,0,0,0.7),
+        inset 0 1px 0 rgba(255,255,255,0.12);
+}
+
+.btn-small:active:not(:disabled) {
+    transform: translateY(1px);
+    box-shadow: 
+        0 1px 3px rgba(0,0,0,0.6),
+        inset 0 2px 4px rgba(0,0,0,0.6);
+}
+
+.btn-small:disabled {
+    background: linear-gradient(180deg, #1a1614 0%, #0d0a09 100%);
+    color: #4d4440;
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.btn-small.danger {
+    background: linear-gradient(180deg, #5a1a1a 0%, #330d0d 100%);
+    border-color: #6a2a2a;
+    color: #d5a8a8;
+}
+
+.btn-small.danger:hover:not(:disabled) {
+    background: linear-gradient(180deg, #6a2a2a 0%, #5a1a1a 100%);
+    border-color: #7a3a3a;
+    box-shadow: 
+        0 5px 8px rgba(0,0,0,0.7), 
+        0 0 15px rgba(106,42,42,0.5);
+}
+
+.btn-small.secondary {
+    background: linear-gradient(180deg, #1a3d5a 0%, #0d2633 100%);
+    border-color: #2a4d6a;
+    color: #a8c5d5;
+}
+
+.btn-small.secondary:hover:not(:disabled) {
+    background: linear-gradient(180deg, #2a4d6a 0%, #1a3d5a 100%);
+    border-color: #3a5d7a;
+    box-shadow: 
+        0 5px 8px rgba(0,0,0,0.7), 
+        0 0 15px rgba(42,77,106,0.5);
+}
+
+/* Tooltip - Dark Theme */
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 200px;
+    background-color: #1a1614;
+    color: #c9b8a3;
+    text-align: center;
+    border: 2px solid #3d3430;
+    border-radius: 4px;
+    padding: 10px;
+    position: absolute;
+    z-index: 1000;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -100px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    font-size: 12px;
+    font-family: 'Courier New', 'Consolas', monospace;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.9);
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Modal Buttons - Post-Apocalyptic Style */
+.btn-primary, .btn-secondary {
+    padding: 12px 20px;
+    border: 3px solid #3d3430;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-family: 'Courier New', 'Consolas', monospace;
+    transition: all 0.2s ease;
+    box-shadow: 
+        0 5px 8px rgba(0,0,0,0.6),
+        inset 0 1px 0 rgba(255,255,255,0.08);
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.9);
+}
+
+.btn-primary {
+    background: linear-gradient(180deg, #2d4a24 0%, #1d3318 100%);
+    border-color: #3d5a34;
+    color: #b8d4a8;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(180deg, #3d5a34 0%, #2d4a24 100%);
+    border-color: #4d6a44;
+    transform: translateY(-1px);
+    box-shadow: 
+        0 7px 12px rgba(0,0,0,0.7), 
+        0 0 20px rgba(61,90,52,0.5);
+}
+
+.btn-secondary {
+    background: linear-gradient(180deg, #2a2622 0%, #1a1614 100%);
+    border-color: #3d3430;
+    color: #c9b8a3;
+}
+
+.btn-secondary:hover {
+    background: linear-gradient(180deg, #3d3430 0%, #2a2622 100%);
+    border-color: #4d4440;
+    transform: translateY(-1px);
+    box-shadow: 0 7px 12px rgba(0,0,0,0.7);
+}
+
+.btn-primary:active, .btn-secondary:active {
+    transform: translateY(1px);
+    box-shadow: 
+        0 2px 4px rgba(0,0,0,0.6),
+        inset 0 3px 6px rgba(0,0,0,0.6);
+}
+
