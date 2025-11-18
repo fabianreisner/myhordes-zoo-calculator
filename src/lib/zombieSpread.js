@@ -181,12 +181,14 @@ export function simulateDay(zones, day, config) {
   });
 
   // Check if respawn is needed
+  // Note: Respawn check uses the NEXT day (day + 1) because in the game,
+  // the day is incremented before the zombie spawn happens (NightlyHandler.php:1820)
   const totalZombies = getTotalZombies(zones);
   const mode = 'auto'; // Could be 'force', 'auto', or 'none'
   
   if (mode === 'force' || 
-      (mode === 'auto' && !isAboveMinimumZombies(totalZombies, day, config))) {
-    performRespawn(zones, day, config, despairDb);
+      (mode === 'auto' && !isAboveMinimumZombies(totalZombies, day + 1, config))) {
+    performRespawn(zones, day + 1, config, despairDb);
   }
 
   // Run ONE spread cycle per day (matching game behavior)
