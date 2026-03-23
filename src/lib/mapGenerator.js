@@ -19,8 +19,11 @@ export function generateEmptyMap(size, originX = 0, originY = 0) {
   const offset = Math.floor(size / 2);
 
   // Create all zones (empty, no zombies, no buildings)
-  for (let x = -offset; x <= offset; x++) {
-    for (let y = -offset; y <= offset; y++) {
+  // Use [0, size) range to match rendering grid exactly (important for even sizes)
+  for (let i = 0; i < size; i++) {
+    for (let j = 0; j < size; j++) {
+      const x = i - offset;
+      const y = j - offset;
       const zone = new Zone(x - originX, y - originY);
       zones.set(zone.key, zone);
     }
@@ -43,8 +46,11 @@ export function generateMap(size, config, originX = 0, originY = 0) {
 
   // Create all zones
   // Coordinates are relative to origin (originX, originY)
-  for (let x = -offset; x <= offset; x++) {
-    for (let y = -offset; y <= offset; y++) {
+  // Use [0, size) range to match rendering grid exactly (important for even sizes)
+  for (let i = 0; i < size; i++) {
+    for (let j = 0; j < size; j++) {
+      const x = i - offset;
+      const y = j - offset;
       const zone = new Zone(x - originX, y - originY);
       zones.set(zone.key, zone);
     }
